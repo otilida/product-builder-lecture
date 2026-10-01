@@ -1,0 +1,401 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>로또 번호 추천</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        /* 전체 화면 */
+        body {
+            margin: 0;
+            font-family: Arial, "맑은 고딕", sans-serif;
+
+            background: #121212;
+            color: #eeeeee;
+
+            min-height: 100vh;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+
+        /* 메인 카드 */
+        .container {
+            width: 90%;
+            max-width: 700px;
+
+            background: #1e1e1e;
+
+            padding: 40px 30px;
+
+            border-radius: 20px;
+
+            box-shadow:
+                0 10px 30px rgba(0, 0, 0, 0.6);
+        }
+
+
+        /* 제목 */
+        h1 {
+            text-align: center;
+
+            margin-top: 0;
+            margin-bottom: 10px;
+
+            color: #ffffff;
+        }
+
+
+        /* 설명 */
+        .description {
+            text-align: center;
+
+            color: #aaaaaa;
+
+            margin-bottom: 30px;
+        }
+
+
+        /* 게임 하나 */
+        .game {
+            margin-bottom: 18px;
+
+            padding: 12px 15px;
+
+            background: #252525;
+
+            border-radius: 12px;
+        }
+
+
+        /* 게임 번호 */
+        .game-title {
+            font-weight: bold;
+
+            color: #bbbbbb;
+
+            margin-bottom: 8px;
+        }
+
+
+        /* 번호 영역 */
+        .numbers {
+            display: flex;
+
+            gap: 10px;
+
+            flex-wrap: wrap;
+        }
+
+
+        /* 로또 공 */
+        .ball {
+            width: 48px;
+            height: 48px;
+
+            border-radius: 50%;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            font-size: 17px;
+            font-weight: bold;
+
+            color: white;
+
+            box-shadow:
+                0 3px 8px rgba(0, 0, 0, 0.5);
+        }
+
+
+        /* 1~10 */
+        .yellow {
+            background-color: #fbc02d;
+        }
+
+
+        /* 11~20 */
+        .blue {
+            background-color: #1976d2;
+        }
+
+
+        /* 21~30 */
+        .red {
+            background-color: #e53935;
+        }
+
+
+        /* 31~40 */
+        .gray {
+            background-color: #757575;
+        }
+
+
+        /* 41~45 */
+        .green {
+            background-color: #43a047;
+        }
+
+
+        /* 추천 버튼 */
+        button {
+            display: block;
+
+            margin: 30px auto 0;
+
+            border: none;
+
+            padding: 15px 40px;
+
+            font-size: 18px;
+            font-weight: bold;
+
+            color: white;
+
+            background-color: #444444;
+
+            border-radius: 10px;
+
+            cursor: pointer;
+
+            transition: 0.2s;
+        }
+
+
+        /* 버튼에 마우스를 올렸을 때 */
+        button:hover {
+            background-color: #666666;
+
+            transform: translateY(-2px);
+        }
+
+
+        /* 버튼 클릭 */
+        button:active {
+            transform: translateY(0);
+        }
+
+
+        /* 추천 횟수 */
+        .count {
+            text-align: center;
+
+            margin-top: 20px;
+
+            color: #777777;
+
+            font-size: 14px;
+        }
+
+
+        /* 모바일 화면 */
+        @media (max-width: 500px) {
+
+            .container {
+                padding: 30px 15px;
+            }
+
+            .ball {
+                width: 42px;
+                height: 42px;
+
+                font-size: 15px;
+            }
+
+            .game {
+                padding: 10px;
+            }
+        }
+
+    </style>
+</head>
+
+
+<body>
+
+<div class="container">
+
+    <h1>🎱 로또 번호 추천</h1>
+
+    <p class="description">
+        버튼을 누르면 5게임의 번호를 추천합니다.
+    </p>
+
+
+    <!-- 추천 번호 -->
+    <div id="lottoContainer">
+
+        <p style="text-align:center; color:#777777;">
+            번호를 추천받아 보세요!
+        </p>
+
+    </div>
+
+
+    <!-- 추천 버튼 -->
+    <button onclick="generateNumbers()">
+        🎲 5게임 추천하기
+    </button>
+
+
+    <!-- 추천 횟수 -->
+    <div class="count" id="count">
+        추천 횟수: 0회
+    </div>
+
+</div>
+
+
+<script>
+
+    let count = 0;
+
+
+    // 로또 번호 1게임 생성
+    function createLottoNumbers() {
+
+        let numbers = [];
+
+        // 1~45 생성
+        for (let i = 1; i <= 45; i++) {
+            numbers.push(i);
+        }
+
+
+        // 숫자를 무작위로 섞기
+        numbers.sort(() => Math.random() - 0.5);
+
+
+        // 앞에서 6개 선택
+        let lottoNumbers = numbers.slice(0, 6);
+
+
+        // 오름차순 정렬
+        lottoNumbers.sort((a, b) => a - b);
+
+
+        return lottoNumbers;
+    }
+
+
+    // 번호별 색상
+    function getBallColor(number) {
+
+        if (number <= 10) {
+            return "yellow";
+        }
+
+        else if (number <= 20) {
+            return "blue";
+        }
+
+        else if (number <= 30) {
+            return "red";
+        }
+
+        else if (number <= 40) {
+            return "gray";
+        }
+
+        else {
+            return "green";
+        }
+    }
+
+
+    // 5게임 추천
+    function generateNumbers() {
+
+        const container =
+            document.getElementById("lottoContainer");
+
+
+        // 기존 번호 삭제
+        container.innerHTML = "";
+
+
+        // 5게임 생성
+        for (let game = 1; game <= 5; game++) {
+
+            // 게임 영역
+            const gameDiv =
+                document.createElement("div");
+
+            gameDiv.classList.add("game");
+
+
+            // 게임 이름
+            const title =
+                document.createElement("div");
+
+            title.classList.add("game-title");
+
+            title.textContent =
+                game + "게임";
+
+
+            // 번호 영역
+            const numbersDiv =
+                document.createElement("div");
+
+            numbersDiv.classList.add("numbers");
+
+
+            // 번호 6개 생성
+            const lottoNumbers =
+                createLottoNumbers();
+
+
+            // 번호 표시
+            lottoNumbers.forEach(number => {
+
+                const ball =
+                    document.createElement("div");
+
+
+                ball.classList.add(
+                    "ball",
+                    getBallColor(number)
+                );
+
+
+                ball.textContent = number;
+
+
+                numbersDiv.appendChild(ball);
+
+            });
+
+
+            gameDiv.appendChild(title);
+
+            gameDiv.appendChild(numbersDiv);
+
+            container.appendChild(gameDiv);
+        }
+
+
+        // 추천 횟수 증가
+        count++;
+
+
+        document.getElementById("count").textContent =
+            "추천 횟수: " + count + "회";
+    }
+
+</script>
+
+</body>
+</html>
+```
