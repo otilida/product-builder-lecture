@@ -148,6 +148,25 @@
         }
 
 
+        /* 보너스 번호 */
+        .bonus {
+            background-color: #8e24aa;
+        }
+
+
+        /* 보너스 번호 앞 구분 기호 */
+        .plus-sign {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            font-size: 20px;
+            font-weight: bold;
+
+            color: #888888;
+        }
+
+
         /* 추천 버튼 */
         button {
             display: block;
@@ -226,7 +245,11 @@
 
 <div class="container">
 
-    <h1>🎱 로또 번호 추천</h1>
+    <h1>🎱
+        <span style="color:#fbc02d;">로</span><span style="color:#1976d2;">또</span>
+        <span style="color:#e53935;">번</span><span style="color:#757575;">호</span>
+        <span style="color:#43a047;">추</span><span style="color:#8e24aa;">천</span>
+    </h1>
 
     <p class="description">
         버튼을 누르면 5게임의 번호를 추천합니다.
@@ -262,7 +285,7 @@
     let count = 0;
 
 
-    // 로또 번호 1게임 생성
+    // 로또 번호 1게임 생성 (메인 6개 + 보너스 1개)
     function createLottoNumbers() {
 
         let numbers = [];
@@ -285,7 +308,14 @@
         lottoNumbers.sort((a, b) => a - b);
 
 
-        return lottoNumbers;
+        // 메인 번호와 겹치지 않는 보너스 번호
+        let bonusNumber = numbers[6];
+
+
+        return {
+            numbers: lottoNumbers,
+            bonus: bonusNumber
+        };
     }
 
 
@@ -352,13 +382,13 @@
             numbersDiv.classList.add("numbers");
 
 
-            // 번호 6개 생성
-            const lottoNumbers =
+            // 번호 6개 + 보너스 번호 생성
+            const gameNumbers =
                 createLottoNumbers();
 
 
             // 번호 표시
-            lottoNumbers.forEach(number => {
+            gameNumbers.numbers.forEach(number => {
 
                 const ball =
                     document.createElement("div");
@@ -376,6 +406,28 @@
                 numbersDiv.appendChild(ball);
 
             });
+
+
+            // 보너스 번호 구분 기호
+            const plusSign =
+                document.createElement("div");
+
+            plusSign.classList.add("plus-sign");
+
+            plusSign.textContent = "+";
+
+            numbersDiv.appendChild(plusSign);
+
+
+            // 보너스 번호 표시
+            const bonusBall =
+                document.createElement("div");
+
+            bonusBall.classList.add("ball", "bonus");
+
+            bonusBall.textContent = gameNumbers.bonus;
+
+            numbersDiv.appendChild(bonusBall);
 
 
             gameDiv.appendChild(title);
