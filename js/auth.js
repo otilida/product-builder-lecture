@@ -24,8 +24,11 @@
             var logout = document.createElement("button");
             logout.type = "button";
             logout.textContent = "로그아웃";
-            logout.addEventListener("click", function () {
-                window.sb.auth.signOut();
+            logout.addEventListener("click", async function () {
+                var res = await window.sb.auth.signOut();
+                if (!res.error) {
+                    location.href = "index.html";
+                }
             });
 
             menu.appendChild(email);

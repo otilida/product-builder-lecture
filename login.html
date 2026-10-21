@@ -79,7 +79,11 @@
         btn.disabled = false;
 
         if (res.error) {
-            msg.textContent = "이메일 또는 비밀번호를 확인해 주세요";
+            if ((res.error.message || "") === "Email not confirmed") {
+                msg.textContent = "이메일 확인이 필요합니다. 받은 메일의 링크를 눌러 주세요.";
+            } else {
+                msg.textContent = "이메일 또는 비밀번호를 확인해 주세요";
+            }
             msg.className = "auth-message error";
             return;
         }

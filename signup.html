@@ -109,13 +109,17 @@
 
         // 이미 가입된 이메일이면 (이메일 확인 설정 시) 오류 대신 identities가 빈 배열로 옴
         if (res.data.user && res.data.user.identities && res.data.user.identities.length === 0) {
-            show("이미 가입된 이메일입니다.", "error");
+            show("이미 가입된 이메일입니다. 로그인해 주세요.", "error");
             return;
         }
 
         form.reset();
-        show("가입되었습니다! 잠시 후 로그인 페이지로 이동합니다. (이메일 확인이 필요하면 메일함을 확인해 주세요)", "success");
-        setTimeout(function () { location.href = "login.html"; }, 2500);
+        if (!res.data.session) {
+            show("가입 확인 메일을 보냈습니다. 메일의 링크를 누른 뒤 로그인해 주세요.", "success");
+        } else {
+            show("가입되었습니다! 잠시 후 로그인 페이지로 이동합니다.", "success");
+            setTimeout(function () { location.href = "login.html"; }, 2500);
+        }
     });
 </script>
 </body>
