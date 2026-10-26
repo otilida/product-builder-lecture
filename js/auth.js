@@ -1,4 +1,10 @@
 // 모든 페이지에서 supabase-client.js 다음에 불러옵니다.
+// 비밀번호 정책 (Supabase Authentication > 비밀번호 설정과 같게 유지)
+window.PASSWORD_RULE_MSG = "비밀번호는 8자 이상이며, 영문 대문자, 영문 소문자, 숫자, 기호를 각각 하나 이상 포함해야 해요.";
+window.isStrongPassword = function (pw) {
+    return pw.length >= 8 && /[A-Z]/.test(pw) && /[a-z]/.test(pw) && /[0-9]/.test(pw) && /[^A-Za-z0-9]/.test(pw);
+};
+
 (function () {
     var nav = document.createElement("nav");
     nav.className = "auth-nav";
