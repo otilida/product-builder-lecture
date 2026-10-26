@@ -164,7 +164,10 @@
             return;
         }
         document.getElementById("pwForm").reset();
-        show(pwMsg, "비밀번호가 변경되었습니다.", "success");
+        show(pwMsg, "비밀번호가 변경되었습니다. 다시 로그인해 주세요.", "success");
+        btn.disabled = true;
+        await window.sb.auth.signOut();
+        setTimeout(function () { location.href = "login.html"; }, 1500);
     });
 
     // 회원 탈퇴 (supabase/delete_account.sql 의 delete_my_account 함수 필요)
