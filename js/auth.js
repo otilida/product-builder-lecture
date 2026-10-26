@@ -17,8 +17,10 @@
         menu.className = "menu";
 
         if (session && session.user) {
-            var email = document.createElement("span");
+            var email = document.createElement("a");
             email.className = "user-email";
+            email.href = "mypage.html";
+            email.title = "마이페이지";
             email.textContent = session.user.email;
 
             var logout = document.createElement("button");
