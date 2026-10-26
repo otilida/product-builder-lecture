@@ -140,3 +140,51 @@ body.has-auth-nav {
 .google-btn:hover {
     background-color: #e8e8e8;
 }
+
+/* 마이페이지 */
+.mypage-section {
+    margin-top: 28px;
+    padding-top: 24px;
+    border-top: 1px solid #333333;
+}
+
+.mypage-section h2 {
+    margin: 0 0 12px;
+    font-size: 18px;
+    color: #ffffff;
+}
+
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 8px 0;
+    font-size: 14px;
+    color: #bbbbbb;
+}
+
+.info-row span:last-child {
+    color: #eeeeee;
+    text-align: right;
+    word-break: break-all;
+}
+
+.auth-form .danger-btn {
+    background-color: #b71c1c;
+}
+
+.auth-form .danger-btn:hover {
+    background-color: #e53935;
+}
+
+.hint {
+    font-size: 13px;
+    color: #777777;
+    margin: 8px 0 0;
+}
+
+.pw-hint {
+    margin: 6px 0 0;
+    font-size: 12px;
+    color: #777777;
+}
