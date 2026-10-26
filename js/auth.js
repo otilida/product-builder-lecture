@@ -60,4 +60,24 @@
     window.sb.auth.onAuthStateChange(function (event, session) {
         render(session);
     });
+
+    // "Google로 계속하기" 버튼 (login.html, signup.html). 구글 로그인 후 index.html로 돌아옵니다.
+    var googleBtn = document.getElementById("googleBtn");
+    if (googleBtn) {
+        googleBtn.addEventListener("click", async function () {
+            googleBtn.disabled = true;
+            var res = await window.sb.auth.signInWithOAuth({
+                provider: "google",
+                options: { redirectTo: new URL("index.html", location.href).href }
+            });
+            if (res.error) {
+                googleBtn.disabled = false;
+                var m = document.getElementById("message");
+                if (m) {
+                    m.textContent = "Google 로그인을 시작하지 못했습니다. 잠시 후 다시 시도해 주세요.";
+                    m.className = "auth-message error";
+                }
+            }
+        });
+    }
 })();

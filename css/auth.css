@@ -118,3 +118,25 @@ body.has-auth-nav {
 .auth-links a {
     color: #1976d2;
 }
+
+/* Google 로그인 */
+.auth-divider {
+    text-align: center;
+    margin-top: 20px;
+    color: #777777;
+    font-size: 13px;
+}
+
+.auth-form + .auth-divider + .google-btn,
+.google-btn {
+    width: 100%;
+    margin-top: 12px;
+    padding: 12px 20px;
+    font-size: 16px;
+    background-color: #ffffff;
+    color: #333333;
+}
+
+.google-btn:hover {
+    background-color: #e8e8e8;
+}
