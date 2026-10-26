@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회원가입 - 로또 번호 추천</title>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            font-family: Arial, "맑은 고딕", sans-serif;
+            background: #121212;
+            color: #eeeeee;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .container {
+            width: 90%;
+            max-width: 420px;
+            background: #1e1e1e;
+            padding: 40px 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+        }
+        h1 { text-align: center; margin-top: 0; margin-bottom: 10px; color: #ffffff; }
+        button {
+            display: block;
+            margin: 30px auto 0;
+            border: none;
+            padding: 15px 40px;
+            font-size: 18px;
+            font-weight: bold;
+            color: white;
+            background-color: #444444;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        button:hover { background-color: #666666; transform: translateY(-2px); }
+        button:disabled { opacity: 0.6; cursor: default; transform: none; }
+    </style>
+    <link rel="stylesheet" href="css/auth.css">
+</head>
+<body>
+<div class="container">
+    <h1>회원가입</h1>
+    <form id="signupForm" class="auth-form" novalidate>
+        <label for="email">이메일</label>
+        <input type="email" id="email" autocomplete="email" required>
+
+        <label for="password">비밀번호 (6자 이상)</label>
+        <input type="password" id="password" autocomplete="new-password" minlength="6" required>
+
+        <label for="password2">비밀번호 확인</label>
+        <input type="password" id="password2" autocomplete="new-password" minlength="6" required>
+
+        <button type="submit" id="submitBtn">가입하기</button>
+    </form>
+    <div class="auth-divider">또는</div>
+    <button type="button" id="googleBtn" class="google-btn">Google로 계속하기</button>
+    <div class="auth-message" id="message" role="status"></div>
+    <div class="auth-links">이미 계정이 있나요? <a href="login.html">로그인</a></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script src="js/supabase-client.js"></script>
+<script src="js/auth.js"></script>
+<script>
+    var form = document.getElementById("signupForm");
+    var msg = document.getElementById("message");
+    var btn = document.getElementById("submitBtn");
+
+    function show(text, type) {
+        msg.textContent = text;
+        msg.className = "auth-message " + type;
+    }
+
+    form.addEventListener("submit", async function (e) {
+        e.preventDefault();
+        var email = document.getElementById("email").value.trim();
+        var password = document.getElementById("password").value;
+        var password2 = document.getElementById("password2").value;
+
+        if (!email) { show("이메일을 입력해 주세요.", "error"); return; }
+        if (password.length < 6) { show("비밀번호는 6자 이상이어야 합니다.", "error"); return; }
+        if (password !== password2) { show("비밀번호가 서로 일치하지 않습니다.", "error"); return; }
+
+        btn.disabled = true;
+        show("처리 중...", "");
+
+        var res = await window.sb.auth.signUp({ email: email, password: password });
+        btn.disabled = false;
+
+        if (res.error) {
+            var m = (res.error.message || "").toLowerCase();
+            if (m.indexOf("already") !== -1) {
+                show("이미 가입된 이메일입니다.", "error");
+            } else if (m.indexOf("password") !== -1) {
+                show("비밀번호가 너무 짧거나 안전하지 않습니다. (6자 이상)", "error");
+            } else if (m.indexOf("invalid") !== -1 && m.indexOf("email") !== -1) {
+                show("올바른 이메일 형식이 아닙니다.", "error");
+            } else if (m.indexOf("rate") !== -1) {
+                show("요청이 너무 많습니다. 잠시 후 다시 시도해 주세요.", "error");
+            } else {
+                show("가입에 실패했습니다. 잠시 후 다시 시도해 주세요.", "error");
+            }
+            return;
+        }
+
+        // 이미 가입된 이메일이면 (이메일 확인 설정 시) 오류 대신 identities가 빈 배열로 옴
+        if (res.data.user && res.data.user.identities && res.data.user.identities.length === 0) {
+            show("이미 가입된 이메일입니다. 로그인해 주세요.", "error");
+            return;
+        }
+
+        form.reset();
+        if (!res.data.session) {
+            show("가입 확인 메일을 보냈습니다. 메일의 링크를 누른 뒤 로그인해 주세요.", "success");
+        } else {
+            show("가입되었습니다! 잠시 후 로그인 페이지로 이동합니다.", "success");
+            setTimeout(function () { location.href = "login.html"; }, 2500);
+        }
+    });
+</script>
+</body>
+</html>
